@@ -9,7 +9,10 @@
     "dev:init": "convex dev --run init --until-success"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@faker-js/faker": "^8.0.2",
+    "@mui/material": "^5.15.0",
     "convex": "1.6.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"

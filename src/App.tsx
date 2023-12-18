@@ -1,61 +1,48 @@
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
-import { useEffect, useState } from "react";
-import { faker } from "@faker-js/faker";
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../convex/_generated/api';
+import { useEffect, useState } from 'react';
+import { Button, TextField } from '@mui/material';
 
-// For demo purposes. In a real app, you'd have real user data.
-const NAME = faker.person.firstName();
+const App = () => {
+  const saveToDb = useMutation(api.users.saveDataToDb);
 
-export default function App() {
-  const messages = useQuery(api.messages.list);
-  const sendMessage = useMutation(api.messages.send);
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
 
-  const [newMessageText, setNewMessageText] = useState("");
+  const assignName = (event) => {
+    setName(event.target.value);
+  };
 
-  useEffect(() => {
-    // Make sure scrollTo works on button click in Chrome
-    setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    }, 0);
-  }, [messages]);
+  const assignAge = (event) => {
+    setAge(event.target.value);
+  };
+
+  const send = () => {
+    saveToDb({ name, age: parseInt(age) });
+  };
 
   return (
-    <main className="chat">
-      <header>
-        <h1>Convex Chat</h1>
-        <p>
-          Connected as <strong>{NAME}</strong>
-        </p>
-      </header>
-      {messages?.map((message) => (
-        <article
-          key={message._id}
-          className={message.author === NAME ? "message-mine" : ""}
-        >
-          <div>{message.author}</div>
+    <div>
+      <div>Name: {name}</div>
+      <div>age: {age}</div>
+      <TextField onChange={assignName} label="Name" variant="standard" />
 
-          <p>{message.body}</p>
-        </article>
-      ))}
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await sendMessage({ body: newMessageText, author: NAME });
-          setNewMessageText("");
-        }}
-      >
-        <input
-          value={newMessageText}
-          onChange={async (e) => {
-            const text = e.target.value;
-            setNewMessageText(text);
-          }}
-          placeholder="Write a message…"
-        />
-        <button type="submit" disabled={!newMessageText}>
-          Send
-        </button>
-      </form>
-    </main>
+      <br />
+      <TextField
+        onChange={assignAge}
+        id="standard-basic"
+        label="Age"
+        variant="standard"
+      />
+
+      <br />
+
+      <Button variant="contained" onClick={send}>
+        {' '}
+        Send{' '}
+      </Button>
+    </div>
   );
-}
+};
+
+export default App;
